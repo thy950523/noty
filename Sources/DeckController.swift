@@ -42,6 +42,10 @@ final class DeckModel: ObservableObject {
     /// DeckGeom reads the scale straight from Settings; this mirror exists purely
     /// so a change to it invalidates the views that measure against it.
     @Published var scale: Double = Settings.deckScale
+    /// The same trick for the tab titles: Ink.tabFont reads Settings directly,
+    /// and without an observable value changing here the deck would keep
+    /// drawing every label at its old size.
+    @Published var tabTitleSize: Double = Settings.tabTitleSize
     @Published var onLeftEdge: Bool = Settings.deckOnLeftEdge
     @Published var fontSize: Double = Settings.noteFontSize
     @Published var markdown: Bool = Settings.markdownStyling
@@ -69,6 +73,7 @@ final class DeckModel: ObservableObject {
         hideActions = Settings.deckHideActions
         pillHidden = Settings.deckPillHidden
         scale = Settings.deckScale
+        tabTitleSize = Settings.tabTitleSize
         onLeftEdge = Settings.deckOnLeftEdge
         fontSize = Settings.noteFontSize
         markdown = Settings.markdownStyling

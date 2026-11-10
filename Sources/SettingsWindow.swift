@@ -110,6 +110,7 @@ final class SettingsModel: ObservableObject {
     @Published var pillHidden: Bool     { didSet { Settings.deckPillHidden = pillHidden; apply() } }
     @Published var hideActions: Bool    { didSet { Settings.deckHideActions = hideActions; apply() } }
     @Published var deckScale: Double    { didSet { Settings.deckScale = deckScale; apply() } }
+    @Published var tabTitleSize: Double { didSet { Settings.tabTitleSize = tabTitleSize; apply() } }
     @Published var onLeftEdge: Bool     { didSet { Settings.deckOnLeftEdge = onLeftEdge; apply() } }
     @Published var displayTarget: String { didSet { Settings.displayTarget = displayTarget; apply() } }
     @Published var screens: [NSScreen] = NSScreen.screens
@@ -126,7 +127,8 @@ final class SettingsModel: ObservableObject {
     @Published var fontName: String     { didSet { Settings.noteFontName = fontName; apply() } }
     @Published var fontSize: Double     { didSet { Settings.noteFontSize = fontSize; apply() } }
     @Published var markdown: Bool       { didSet { Settings.markdownStyling = markdown; apply() } }
-    @Published var noteSizeIndex: Int   { didSet { Settings.noteSizeIndex = noteSizeIndex; apply() } }
+    @Published var noteWidth: Double    { didSet { Settings.noteWidth = noteWidth; apply() } }
+    @Published var noteHeight: Double   { didSet { Settings.noteHeight = noteHeight; apply() } }
     @Published var openOnHover: Bool    { didSet { Settings.openOnHover = openOnHover; apply() } }
     @Published var tabPreview: Bool     { didSet { Settings.tabPreview = tabPreview; apply() } }
 
@@ -167,6 +169,7 @@ final class SettingsModel: ObservableObject {
         pillHidden = Settings.deckPillHidden
         hideActions = Settings.deckHideActions
         deckScale = Settings.deckScale
+        tabTitleSize = Settings.tabTitleSize
         onLeftEdge = Settings.deckOnLeftEdge
         displayTarget = Settings.displayTarget
         screens = NSScreen.screens
@@ -178,7 +181,8 @@ final class SettingsModel: ObservableObject {
         fontName = Settings.noteFontName
         fontSize = Settings.noteFontSize
         markdown = Settings.markdownStyling
-        noteSizeIndex = Settings.noteSizeIndex
+        noteWidth = Settings.noteWidth
+        noteHeight = Settings.noteHeight
         openOnHover = Settings.openOnHover
         tabPreview = Settings.tabPreview
         cloudSync = Settings.cloudSyncEnabled
@@ -418,6 +422,23 @@ struct SettingsView: View {
                         .font(.system(size: 11)).foregroundStyle(.secondary)
                 }
             }
+            LabeledContent {
+                HStack(spacing: 10) {
+                    Slider(value: $model.tabTitleSize,
+                           in: Settings.tabTitleRange.lowerBound...Settings.tabTitleRange.upperBound,
+                           step: 0.5).frame(width: 210)
+                    Text(L10n.format("settings.notes.font_size_value", model.tabTitleSize))
+                        .font(.system(size: 11).monospacedDigit())
+                        .foregroundStyle(.secondary).frame(width: 52, alignment: .leading)
+                }
+            } label: {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(L10n.text("settings.deck.tab_title"))
+                    Text(L10n.text("settings.deck.tab_title_help"))
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
             if model.screens.count > 1 {
                 LabeledContent(L10n.text("settings.deck.display")) {
                     Picker("", selection: $model.displayTarget) {
@@ -502,13 +523,20 @@ struct SettingsView: View {
                     }
                 }.labelsHidden()
             }
-            LabeledContent(L10n.text("settings.notes.note_size")) {
-                Picker("", selection: $model.noteSizeIndex) {
-                    ForEach(Array(Settings.noteSizes.enumerated()), id: \.offset) { i, s in
-                        Text(L10n.text(s.nameKey)).tag(i)
-                    }
+            LabeledContent {
+                VStack(alignment: .leading, spacing: 6) {
+                    sizeSlider(L10n.text("settings.notes.note_width"),
+                               value: $model.noteWidth, range: Settings.noteWidthRange)
+                    sizeSlider(L10n.text("settings.notes.note_height"),
+                               value: $model.noteHeight, range: Settings.noteHeightRange)
                 }
-                .labelsHidden().pickerStyle(.segmented)
+            } label: {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(L10n.text("settings.notes.note_size"))
+                    Text(L10n.text("settings.notes.note_size_help"))
+                        .font(.system(size: 11)).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             LabeledContent(L10n.text("settings.notes.text_size")) {
                 HStack(spacing: 10) {
@@ -630,6 +658,23 @@ struct SettingsView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
+        }
+    }
+
+    /// A width/height slider with its name and current value on either side.
+    private func sizeSlider(_ title: String, value: Binding<Double>,
+                            range: ClosedRange<Double>) -> some View {
+        HStack(spacing: 8) {
+            Text(title)
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+                .frame(width: 44, alignment: .trailing)
+            Slider(value: value, in: range, step: 10)
+                .frame(width: 210)
+            Text(L10n.format("settings.notes.size_value", Int(value.wrappedValue.rounded())))
+                .font(.system(size: 11).monospacedDigit())
+                .foregroundStyle(.secondary)
+                .frame(width: 52, alignment: .leading)
         }
     }
 

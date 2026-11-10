@@ -156,7 +156,9 @@
 "settings.deck.language" = "语言";
 "settings.deck.language_help" = "更改语言后，Noty 会自动重新启动。";
 "settings.deck.size" = "大小";
-"settings.deck.size_help" = "同时缩放标签、标签文字、颜色标记和收起后的胶囊。";
+"settings.deck.size_help" = "同时缩放标签、标签文字、颜色标记和收起后的胶囊；标题文字也可以单独调整。";
+"settings.deck.tab_title" = "标签标题大小";
+"settings.deck.tab_title_help" = "贴在屏幕边缘的标签上标题文字的大小；仍会随上面的“大小”一起缩放。";
 "settings.deck.style" = "样式";
 "settings.deck.tab" = "便笺栏";
 
@@ -166,6 +168,10 @@
 "settings.notes.markdown" = "输入时显示 Markdown 样式";
 "settings.notes.markdown_help" = "支持 **粗体**、*斜体*、`代码`、~~删除线~~、# 标题、> 引用和 [链接](url)；按住 ⌘ 点按可打开链接。文本仍以纯文本保存，只改变显示效果。";
 "settings.notes.note_size" = "便笺大小";
+"settings.notes.note_size_help" = "贴边展开的便笺的宽度和高度。拖出便笺栏的浮动便笺可自由拖拽边缘缩放。";
+"settings.notes.note_width" = "宽";
+"settings.notes.note_height" = "高";
+"settings.notes.size_value" = "%ld 点";
 "settings.notes.tab" = "便笺";
 "settings.notes.text_size" = "文本大小";
 

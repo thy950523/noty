@@ -156,7 +156,9 @@
 "settings.deck.language" = "Language";
 "settings.deck.language_help" = "Noty restarts automatically when you change the language.";
 "settings.deck.size" = "Size";
-"settings.deck.size_help" = "Scales the tabs, their labels, the chips and the resting pill together.";
+"settings.deck.size_help" = "Scales the tabs, their labels, the chips and the resting pill together. The title size can also be set on its own below.";
+"settings.deck.tab_title" = "Tab title size";
+"settings.deck.tab_title_help" = "How large the titles on the edge tabs are. It still scales with the deck size above.";
 "settings.deck.style" = "Style";
 "settings.deck.tab" = "Deck";
 
@@ -166,6 +168,10 @@
 "settings.notes.markdown" = "Style Markdown as you type";
 "settings.notes.markdown_help" = "**bold**, *italic*, `code`, ~~struck~~, # headings, > quotes and [links](url), which ⌘-click opens. The text stays plain — only its appearance changes.";
 "settings.notes.note_size" = "Note size";
+"settings.notes.note_size_help" = "The width and height of the note that opens at the edge. A note pulled off the deck floats free and can be resized by its edges.";
+"settings.notes.note_width" = "Width";
+"settings.notes.note_height" = "Height";
+"settings.notes.size_value" = "%ld pt";
 "settings.notes.tab" = "Notes";
 "settings.notes.text_size" = "Text size";
 

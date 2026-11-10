@@ -211,8 +211,8 @@ enum Settings {
         set { d.set(newValue, forKey: "edgeWidth") }
     }
 
-    // A short list of note sizes. Dragging a corner meant re-laying out a window
-    // and a text view on every pointer move; picking from four does it once.
+    // A short list of note sizes from the days when the note had a four-way
+    // picker. Kept as the seed for anyone upgrading, and as the defaults.
     static let noteSizes: [(nameKey: String, size: CGSize)] = [
         ("size.small",  CGSize(width: 400, height: 320)),
         ("size.medium", CGSize(width: 460, height: 380)),
@@ -220,33 +220,70 @@ enum Settings {
         ("size.huge",   CGSize(width: 680, height: 560)),
     ]
 
-    static var noteSizeIndex: Int {
+    /// The size a note opened at the edge is drawn at. Four presets forced a
+    /// note that is read in passing to pick the nearest wrong size, so width
+    /// and height are adjusted independently instead.
+    static let noteWidthRange: ClosedRange<Double> = 320...900
+    static let noteHeightRange: ClosedRange<Double> = 240...800
+
+    private static let defaultNoteSize = noteSizes[1].size
+
+    /// Seed for a size that has never been set explicitly: a width dragged
+    /// before presets existed wins, then the preset the old picker left behind.
+    private static func legacyNoteSize() -> CGSize {
+        if let index = d.object(forKey: "noteSizeIndex") as? Int,
+           noteSizes.indices.contains(index) {
+            return noteSizes[index].size
+        }
+        return defaultNoteSize
+    }
+
+    static var noteWidth: Double {
         get {
-            if let hit = cachedNoteSizeIndex { return hit }
-            let v: Int
-            if let stored = d.object(forKey: "noteSizeIndex") as? Int,
-               noteSizes.indices.contains(stored) {
-                v = stored
-            } else if case let w = d.double(forKey: "noteWidth"), w > 0 {
-                // Carry over a size that was previously dragged: pick the nearest.
-                v = noteSizes.enumerated()
-                    .min { abs($0.element.size.width - w) < abs($1.element.size.width - w) }?
-                    .offset ?? 1
-            } else {
-                v = 1
+            let stored = d.double(forKey: "noteWidth")
+            if stored > 0 {
+                return min(max(stored, noteWidthRange.lowerBound), noteWidthRange.upperBound)
             }
-            cachedNoteSizeIndex = v
-            return v
+            return legacyNoteSize().width
         }
         set {
-            let v = min(max(newValue, 0), noteSizes.count - 1)
-            cachedNoteSizeIndex = v
-            d.set(v, forKey: "noteSizeIndex")
+            d.set(min(max(newValue, noteWidthRange.lowerBound), noteWidthRange.upperBound),
+                  forKey: "noteWidth")
         }
     }
-    private static var cachedNoteSizeIndex: Int?
 
-    static var noteSize: CGSize { noteSizes[noteSizeIndex].size }
+    static var noteHeight: Double {
+        get {
+            let stored = d.double(forKey: "noteHeight")
+            if stored > 0 {
+                return min(max(stored, noteHeightRange.lowerBound), noteHeightRange.upperBound)
+            }
+            return legacyNoteSize().height
+        }
+        set {
+            d.set(min(max(newValue, noteHeightRange.lowerBound), noteHeightRange.upperBound),
+                  forKey: "noteHeight")
+        }
+    }
+
+    static var noteSize: CGSize { CGSize(width: noteWidth, height: noteHeight) }
+
+    /// Point size of the titles on the tabs docked to the edge, before the
+    /// deck's own scale. The deck scale still multiplies it, so the labels and
+    /// the paper they sit on cannot drift apart; this knob changes how much of
+    /// the tab the title fills.
+    static let tabTitleRange: ClosedRange<Double> = 7...16
+
+    static var tabTitleSize: Double {
+        get {
+            let v = d.double(forKey: "tabTitleSize")
+            return tabTitleRange.contains(v) ? v : 9.5
+        }
+        set {
+            d.set(min(max(newValue, tabTitleRange.lowerBound), tabTitleRange.upperBound),
+                  forKey: "tabTitleSize")
+        }
+    }
 
     /// Open a note by hovering its tab instead of clicking it. Off by default:
     /// the deck is meant to stay quiet until you ask it for something.

@@ -24,6 +24,7 @@ struct EditorStyleEngineTests {
         testVerticalTabLabelLayout()
         testLegacyArchiveDefaultsToAutomaticDirection()
         testTextDirectionDatabaseMigration()
+        SettingsTests.run { check($0, $1) }
         LocalizationTests.run { check($0, $1) }
         TaskMarkerTests.run { check($0, $1) }
         CloudSyncTests.run { check($0, $1) }

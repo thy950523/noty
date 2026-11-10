@@ -227,7 +227,7 @@ enum Ink {
     /// Labels scale with the deck, so a bigger tab carries a bigger title rather
     /// than more empty paper. Layout measures the strip with this very font, so
     /// the two cannot drift apart.
-    static var tabSize: CGFloat { 9.5 * DeckGeom.scale }
+    static var tabSize: CGFloat { CGFloat(Settings.tabTitleSize) * DeckGeom.scale }
     static var tabTracking: CGFloat { 0.1 * DeckGeom.scale }
 
     /// For measuring — layout sizes each tab's strip to the longest label.
