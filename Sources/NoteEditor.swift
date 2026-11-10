@@ -1129,7 +1129,7 @@ struct NoteEditorView: View {
                     .truncationMode(.tail)
                     .foregroundStyle(pal.ink.opacity(0.7))
                     .frame(width: DeckGeom.editorHeight - 44)
-                    .rotationEffect(.degrees(onRight ? 90 : -90))
+                    .rotationEffect(.degrees(DeckGeom.labelRotation))
             }
             .clipped()
             .overlay(alignment: onRight ? .trailing : .leading) {

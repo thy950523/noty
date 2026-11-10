@@ -95,6 +95,11 @@ enum DeckGeom {
     static let leanDegrees: Double = 3.0
     static func lean(onRight: Bool) -> Double { onRight ? -leanDegrees : leanDegrees }
 
+    /// Rotated label runs always turn clockwise, so a title reads from the top
+    /// down on either edge. Only the tab's shape and lean mirror around the
+    /// screen edge; the text itself must not.
+    static let labelRotation: Double = 90
+
     /// Rendered width of a horizontal tab label, used for rotated runs.
     /// Must use the same face the tab draws with or the strip will not fit.
     ///
@@ -260,6 +265,11 @@ enum VerticalLabelLayout {
             scalar.value == 0x20 || scalar.value == 0x3000 || scalar.value == 0x00A0
         }
     }
+
+    /// Runs in the order they are stacked on screen. Reading order is top to
+    /// bottom on either edge: the tab's shape and lean mirror around the screen
+    /// edge, but its title must not turn into a bottom-to-top puzzle.
+    static func displayRuns(_ runs: [VerticalLabelRun]) -> [VerticalLabelRun] { runs }
 
     /// Truncate the logical title from its end, adding an upright ellipsis when
     /// the display strip is squeezed by a short screen or a long title.

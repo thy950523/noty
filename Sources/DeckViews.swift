@@ -481,7 +481,7 @@ struct VerticalTabLabel: View {
         if usesUprightGlyphs {
             let fitted = VerticalLabelLayout.fittingRuns(for: text,
                                                          maxAdvance: availableAdvance)
-            let displayRuns = onRight ? fitted : Array(fitted.reversed())
+            let displayRuns = VerticalLabelLayout.displayRuns(fitted)
             VStack(spacing: 0) {
                 ForEach(Array(displayRuns.enumerated()), id: \.offset) { _, run in
                     runView(run, availableWidth: availableAdvance)
@@ -502,7 +502,7 @@ struct VerticalTabLabel: View {
                 .truncationMode(.tail)
                 .foregroundStyle(ink.opacity(0.85))
                 .frame(width: availableAdvance, height: DeckGeom.tabWidth)
-                .rotationEffect(.degrees(onRight ? 90 : -90))
+                .rotationEffect(.degrees(DeckGeom.labelRotation))
                 .frame(width: DeckGeom.tabWidth, height: strip)
         }
     }
@@ -524,7 +524,7 @@ struct VerticalTabLabel: View {
                 .truncationMode(.tail)
                 .foregroundStyle(ink.opacity(0.85))
                 .frame(width: availableWidth, height: DeckGeom.tabWidth)
-                .rotationEffect(.degrees(onRight ? 90 : -90))
+                .rotationEffect(.degrees(DeckGeom.labelRotation))
                 .frame(width: DeckGeom.tabWidth, height: run.advance)
         }
     }
@@ -775,7 +775,7 @@ struct EmptyTab: View {
                     .foregroundStyle(.secondary)
                     .frame(width: max(20, strip - DeckGeom.labelInset),
                            height: DeckGeom.tabWidth)
-                    .rotationEffect(.degrees(onRight ? 90 : -90))
+                    .rotationEffect(.degrees(DeckGeom.labelRotation))
                     .frame(width: DeckGeom.tabWidth, height: strip)
             }
             .frame(width: DeckGeom.tabWidth, height: height, alignment: .top)

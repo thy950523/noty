@@ -22,6 +22,7 @@ struct EditorStyleEngineTests {
         testLongNotePlanningStaysLocal()
         testTextDirectionConfiguration()
         testVerticalTabLabelLayout()
+        testTabLabelsReadTopToBottomOnEitherEdge()
         testLegacyArchiveDefaultsToAutomaticDirection()
         testTextDirectionDatabaseMigration()
         SettingsTests.run { check($0, $1) }
@@ -148,6 +149,18 @@ struct EditorStyleEngineTests {
               "a squeezed vertical title must end with an ellipsis")
         check(fitted.reduce(0) { $0 + $1.advance } <= DeckGeom.tabGlyphAdvance * 2.5,
               "fitted vertical title must stay within its strip")
+    }
+
+    /// The tab's shape and lean mirror around the screen edge, but the text
+    /// must keep reading from the top down on both sides. A left-edge deck used
+    /// to reverse its runs and rotate the other way, turning titles upside down.
+    private static func testTabLabelsReadTopToBottomOnEitherEdge() {
+        check(DeckGeom.labelRotation == 90,
+              "rotated tab labels turn clockwise on either edge, so they read top to bottom")
+
+        let fitted = VerticalLabelLayout.runs(for: "中文")
+        check(VerticalLabelLayout.displayRuns(fitted).map(\.text) == ["中", "文"],
+              "upright runs stay in reading order on either edge")
     }
 
     private struct LegacyStickyNote: Codable {
